@@ -5,3 +5,8 @@
 .gap-larger {
     gap: 3rem;
 }
+
+.loader{
+    text-align: center;
+    margin: 10px;
+}
