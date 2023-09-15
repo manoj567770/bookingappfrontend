@@ -4,21 +4,58 @@ import "./Categories.css";
 
 export const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [numberToShowCategories, setNumberToShowCategories] = useState(0);
+
+  const handleShowMoreRightClick = () => {
+    setNumberToShowCategories((prev) => prev + 10);
+  };
+
+  const handleShowMoreLeftClick = () => {
+    setNumberToShowCategories((prev) => prev - 10);
+  };
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(
           "https://sore-lime-jellyfish-belt.cyclic.app/api/hotelcategory"
         );
-        setCategories(data);
+        const categoriesToShow = data.slice(
+          numberToShowCategories + 10 > data.length
+            ? data.length - 10
+            : numberToShowCategories,
+          numberToShowCategories > data.length
+            ? data.length
+            : numberToShowCategories + 10
+        );
+        setCategories(categoriesToShow);
       } catch (err) {
         console.log(err);
       }
     })();
-  }, []);
+  }, [numberToShowCategories]);
   return (
-    <section className="d-flex align-center gap-large categories cursor pointer">
-      {categories && categories.map(({ category }) => <span>{category}</span>)}
+    <section className="categories d-flex align-center gap-large">
+      {numberToShowCategories >= 10 && (
+        <button
+          className="button btn-category btn-left fixed cursor-pointer"
+          onClick={handleShowMoreLeftClick}
+        >
+          <span class="material-icons-outlined">chevron_left</span>
+        </button>
+      )}
+
+      {categories &&
+        categories.map(({ _id, category }) => (
+          <span key={_id}>{category}</span>
+        ))}
+      {numberToShowCategories - 10 < categories.length && (
+        <button
+          className="button btn-category btn-right fixed cursor-pointer"
+          onClick={handleShowMoreRightClick}
+        >
+          <span class="material-icons-outlined">chevron_right</span>
+        </button>
+      )}
     </section>
   );
 };
