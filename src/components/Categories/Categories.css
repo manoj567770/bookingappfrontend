@@ -26,3 +26,11 @@
 .btn-right{
     right: 2rem;
 }
+
+.context-category{
+    cursor: pointer;
+}
+.context{
+    cursor: pointer;
+    border-bottom: 2px solid black;
+}

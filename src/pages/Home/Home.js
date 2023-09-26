@@ -3,17 +3,20 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import { Fragment, useEffect, useState } from "react";
 import { Navbar, HotelCard, Categories } from "../../components";
 import "./Home.css";
+import { useCategory } from "../../context";
 
 export const Home = () => {
   const [hotels, setHotels] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(16);
   const [testData, setTestData] = useState([]);
+  const { hotelCategory, setHotelCategory } = useCategory();
+
   useEffect(() => {
     (async () => {
       try {
         const { data } = await axios.get(
-          "https://sore-lime-jellyfish-belt.cyclic.app/api/hotels"
+          `https://sore-lime-jellyfish-belt.cyclic.app/api/hotels?category=${hotelCategory}`
         );
         setTestData(data);
         setHotels(data ? data.slice(0, 16) : []);
@@ -21,7 +24,7 @@ export const Home = () => {
         console.log(err);
       }
     })();
-  }, []);
+  }, [hotelCategory]);
 
   const fetchMoreData = () => {
     if (hotels.length >= testData.length) {
